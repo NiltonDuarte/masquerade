@@ -41,7 +41,7 @@ class WmpModule(wishful_module_wifi.WifiModule):
         self.b43_phy=None
 
     @wishful_module.bind_function(upis.radio.set_parameter_lower_layer)
-    def set_parameter_lower_layer(self, myargs):
+    def set_parameter_lower_layer(self, **myargs):
         self.log.warning('setParameterLowerLayer(): %s' % (str(myargs)))
         ret_lst = []
 
