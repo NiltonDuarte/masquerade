@@ -67,7 +67,8 @@ try:
                 gevent.sleep(10)
                 lowPrio = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 4095}
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**lowPrio)
-        #gevent.sleep(10)
+        else:
+            gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")
 finally:
