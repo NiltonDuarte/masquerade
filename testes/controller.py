@@ -12,13 +12,13 @@ log_level = logging.DEBUG
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
 
 #Create controller
-controller = wishful_controller.Controller(dl="tcp://127.0.0.1:8990", ul="tcp://127.0.0.1:8989")
+controller = wishful_controller.Controller(dl="tcp://10.129.11.2:8990", ul="tcp://10.129.11.2:8989")
 
 #Configure controller
 controller.set_controller_info(name="WishfulController", info="WishfulControllerInfo")
 controller.add_module(moduleName="discovery", pyModuleName="wishful_module_discovery_pyre",
                       className="PyreDiscoveryControllerModule", 
-                      kwargs={"iface":"lo", "groupName":"wishful_1234", "downlink":"tcp://127.0.0.1:8990", "uplink":"tcp://127.0.0.1:8989"})
+                      kwargs={"iface":"eth0", "groupName":"wishful_1234", "downlink":"tcp://10.129.11.2:8990", "uplink":"tcp://10.129.11.2:8989"})
 
 nodes = []
 
@@ -59,10 +59,14 @@ try:
         print("\n")
         print("Connected nodes", [str(node.name) for node in nodes])
         if nodes:
-            args = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 32}
+            for node in nodes:
+            hightPrio = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" : 1, "CSMA_CW_MAX" : 16}
             #result = wmpm.set_parameter_lower_layer(args)
             #controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
-            controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(**args)
+            controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**hightPrio)
+            gevent.sleep(10)
+            lowPrio = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 4095}
+            controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**lowPrio)
         gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")

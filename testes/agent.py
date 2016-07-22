@@ -11,11 +11,11 @@ logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s(
 #Create and configure
 agent = wishful_agent.Agent()
 
-agent.set_agent_info(name="BasicAgent", info="BasicAgentInfo", iface="lo")
+agent.set_agent_info(name="BasicAgent", info="BasicAgentInfo", iface="eth0")
 
 
 agent.add_module(moduleName="discovery", pyModule="wishful_module_discovery_pyre", 
-                 className="PyreDiscoveryAgentModule", kwargs={"iface":"lo", "groupName":"wishful_1234"})
+                 className="PyreDiscoveryAgentModule", kwargs={"iface":"eth0", "groupName":"wishful_1234"})
 
 agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp", 
                  className="WmpModule", interfaces=['wlan0'])
