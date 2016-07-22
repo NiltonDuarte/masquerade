@@ -5,7 +5,7 @@ import logging
 import wishful_agent
 
 log = logging.getLogger('wishful_agent')
-logLevel = logging.INFO
+logLevel = logging.DEBUG
 logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
 
 #Create and configure

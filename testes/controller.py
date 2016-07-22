@@ -53,7 +53,6 @@ def print_response(group, node, data):
 try:
     #Start controller
     controller.start()
-
     #control loop
     while True:
         print("\n")
@@ -62,9 +61,7 @@ try:
             args = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 32}
             #result = wmpm.set_parameter_lower_layer(args)
             controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
-
         gevent.sleep(10)
-
 except KeyboardInterrupt:
     print("Controller exits")
 finally:
