@@ -15,12 +15,8 @@ import shutil
 import wishful_module_wifi
 import wishful_upis as upis
 
-from agent_modules.wifi_wmp.wmp_structure import execution_engine_t
-from agent_modules.wifi_wmp.wmp_structure import radio_platform_t
-from agent_modules.wifi_wmp.wmp_structure import radio_info_t
-from agent_modules.wifi_wmp.wmp_structure import radio_program_t
-from agent_modules.wifi_wmp.wmp_structure import UPI_R
-from agent_modules.wifi_wmp.adaptation_module.libb43 import *
+from wmp_structure import UPI_R
+from adaptation_module.libb43 import *
 
 import wishful_framework as wishful_module
 from wishful_framework.classes import exceptions
