@@ -8,7 +8,7 @@ import gevent
 import wishful_upis as upis
 
 log = logging.getLogger('wishful_controller')
-log_level = logging.INFO
+log_level = logging.DEBUG
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
 
 #Create controller
@@ -59,7 +59,7 @@ try:
         print("\n")
         print("Connected nodes", [str(node.name) for node in nodes])
         if nodes:
-            args = {'interface' : 'wlan0', "CSMA_CW" : 15, "CSMA_CW_MIN" : 15, "CSMA_CW_MAX" : 15}
+            args = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 32}
             #result = wmpm.set_parameter_lower_layer(args)
             controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
 
