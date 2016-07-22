@@ -34,6 +34,10 @@ class WmpModule(wishful_module_wifi.WifiModule):
     def __init__(self):
     	super(WmpModule, self).__init__()
     	self.log = logging.getLogger('WmpModule')
+        self.SUCCESS = 0
+        self.PARTIAL_SUCCESS = 1
+        self.FAILURE = 2
+        self.b43_phy=None
 
     @wishful_module.bind_function(upis.radio.set_parameter_lower_layer)
     def set_parameter_lower_layer(self, myargs):
@@ -48,24 +52,7 @@ class WmpModule(wishful_module_wifi.WifiModule):
         if UPI_R.TDMA_NUMBER_OF_SYNC_SLOT in myargs:
             number_of_sync_slot = myargs[UPI_R.TDMA_NUMBER_OF_SYNC_SLOT]
         if super_frame_size != 0 or number_of_sync_slot !=0 :
-            if super_frame_size != 0 and number_of_sync_slot != 0 :
-                self.log.debug('setting superframe and number_of_sync_slot slot')
-                slot_duration = super_frame_size /  number_of_sync_slot
-                ret_lst.append( self.setRadioProgramParameters(UPI_R.TDMA_SUPER_FRAME_SIZE, slot_duration ) )
-                ret_lst.append( self.setRadioProgramParameters(UPI_R.TDMA_NUMBER_OF_SYNC_SLOT, number_of_sync_slot ) )
-            if super_frame_size == 0 and number_of_sync_slot != 0 :
-                self.log.debug('setting number_of_sync_slot slot')
-                slot_duration = self.readRadioProgramParameters(UPI_R.TDMA_SUPER_FRAME_SIZE)
-                old_number_of_allocated_slot = self.readRadioProgramParameters(UPI_R.TDMA_NUMBER_OF_SYNC_SLOT)
-                slot_duration = (slot_duration * old_number_of_allocated_slot) /  number_of_sync_slot
-                ret_lst.append( self.setRadioProgramParameters(UPI_R.TDMA_SUPER_FRAME_SIZE, slot_duration ) )
-                ret_lst.append( self.setRadioProgramParameters(UPI_R.TDMA_NUMBER_OF_SYNC_SLOT, number_of_sync_slot ) )
-            if super_frame_size != 0 and number_of_sync_slot == 0 :
-                self.log.debug('setting superframe')
-                number_of_sync_slot = self.readRadioProgramParameters(UPI_R.TDMA_NUMBER_OF_SYNC_SLOT)
-                slot_duration = super_frame_size /  number_of_sync_slot
-                ret_lst.append( self.setRadioProgramParameters(UPI_R.TDMA_SUPER_FRAME_SIZE, slot_duration ) )
-            self.startBootStrapOperation()
+            return self.FAILURE
 
 
         #manage other parameter
