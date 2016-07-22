@@ -40,14 +40,15 @@ def node_exit(node, reason):
 def default_callback(group, node, cmd, data):
     print("{} DEFAULT CALLBACK : Group: {}, NodeName: {}, Cmd: {}, Returns: {}".format(datetime.datetime.now(), group, node.name, cmd, data))
 
+def print_response(group, node, data):
+    print("{} Print response : Group:{}, NodeIP:{}, Result:{}".format(datetime.datetime.now(), group, node.ip, data)) 
+
 
 @controller.add_callback(upis.radio.set_parameter_lower_layer)
 def get_channel_reponse(group, node, data):
     print("{} get_set_parameter_reponse : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
 
 
-def print_response(group, node, data):
-    print("{} Print response : Group:{}, NodeIP:{}, Result:{}".format(datetime.datetime.now(), group, node.ip, data)) 
 
 
 try:
@@ -60,7 +61,8 @@ try:
         if nodes:
             args = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 32}
             #result = wmpm.set_parameter_lower_layer(args)
-            controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
+            #controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
+            controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(**args)
         gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")

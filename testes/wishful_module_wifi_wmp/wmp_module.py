@@ -14,6 +14,7 @@ import shutil
 
 import wishful_module_wifi
 import wishful_upis as upis
+import wishful_framework.upi_arg_classes.edca as edca #<----!!!!! Important to include it here; otherwise cannot be pickled!!!!
 
 from wmp_structure import UPI_R
 from adaptation_module.libb43 import *
