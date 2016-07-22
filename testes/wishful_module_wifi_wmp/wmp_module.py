@@ -32,8 +32,8 @@ LOCAL_MAC_PROCESSOR_CTRL_PORT = 1217
 @wishful_module.build_module
 class WmpModule(wishful_module_wifi.WifiModule):
     def __init__(self):
-    	super(WmpModule, self).__init__()
-    	self.log = logging.getLogger('WmpModule')
+        super(WmpModule, self).__init__()
+        self.log = logging.getLogger('WmpModule')
         self.SUCCESS = 0
         self.PARTIAL_SUCCESS = 1
         self.FAILURE = 2
