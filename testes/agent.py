@@ -4,7 +4,7 @@
 import logging
 import wishful_agent
 import yaml
-import plataform
+import platform
 
 log = logging.getLogger('wishful_agent')
 logLevel = logging.DEBUG
