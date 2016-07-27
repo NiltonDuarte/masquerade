@@ -1,4 +1,4 @@
-#!/root/wishful/dev/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import datetime
@@ -6,29 +6,19 @@ import logging
 import wishful_controller
 import gevent
 import wishful_upis as upis
-import plataform
-import netifaces as ni
 
 log = logging.getLogger('wishful_controller')
 log_level = logging.DEBUG
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
 
 #Create controller
-eth0_ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
-dlport=8990
-ulport=8989
-dl="tcp://{0}:{1}".format(eth0_ip, dlport)
-ul="tcp://{0}:{1}".format(eth0_ip, ulport)
-controller = wishful_controller.Controller(dl=dl, ul=ul)
+controller = wishful_controller.Controller(dl="tcp://10.129.11.2:8990", ul="tcp://10.129.11.2:8989")
 
 #Configure controller
-groupName = "wishful_icarus"
-name = "WishfulController-{0}".format(plataform.node())
-info = "Wishful Controller on {0} node. {1}".format(plataform.node(), platform.uname())
-controller.set_controller_info(name=name, info=info)
+controller.set_controller_info(name="WishfulController", info="WishfulControllerInfo")
 controller.add_module(moduleName="discovery", pyModuleName="wishful_module_discovery_pyre",
                       className="PyreDiscoveryControllerModule", 
-                      kwargs={"iface":"eth0", "groupName":groupName, "downlink":dl, "uplink":ul})
+                      kwargs={"iface":"eth0", "groupName":"wishful_1234", "downlink":"tcp://10.129.11.2:8990", "uplink":"tcp://10.129.11.2:8989"})
 
 nodes = []
 
@@ -70,10 +60,10 @@ try:
         print("Connected nodes", [str(node.name) for node in nodes])
         if nodes:
             for node in nodes:
-                highPrio = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" : 1, "CSMA_CW_MAX" : 16}
+                hightPrio = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" : 1, "CSMA_CW_MAX" : 16}
                 #result = wmpm.set_parameter_lower_layer(args)
                 #controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
-                controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**highPrio)
+                controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**hightPrio)
                 gevent.sleep(10)
                 lowPrio = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 4095}
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**lowPrio)
