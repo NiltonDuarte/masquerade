@@ -6,7 +6,7 @@ import logging
 import wishful_controller
 import gevent
 import wishful_upis as upis
-import plataform
+import platform
 import netifaces as ni
 
 log = logging.getLogger('wishful_controller')
@@ -23,8 +23,8 @@ controller = wishful_controller.Controller(dl=dl, ul=ul)
 
 #Configure controller
 groupName = "wishful_icarus"
-name = "WishfulController-{0}".format(plataform.node())
-info = "Wishful Controller on {0} node. {1}".format(plataform.node(), platform.uname())
+name = "WishfulController-{0}".format(platform.node())
+info = "Wishful Controller on {0} node. {1}".format(platform.node(), platform.uname())
 controller.set_controller_info(name=name, info=info)
 controller.add_module(moduleName="discovery", pyModuleName="wishful_module_discovery_pyre",
                       className="PyreDiscoveryControllerModule", 

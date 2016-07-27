@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/root/wishful/dev/bin/python
 # -*- coding: utf-8 -*-
 
 import logging
