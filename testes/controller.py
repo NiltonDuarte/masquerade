@@ -11,7 +11,8 @@ import netifaces as ni
 
 log = logging.getLogger('wishful_controller')
 log_level = logging.DEBUG
-logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
+logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s',
+                    filename="/tmp/wishful_controller.log")
 
 #Create controller
 eth0_ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']

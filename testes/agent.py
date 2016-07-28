@@ -8,7 +8,8 @@ import platform
 
 log = logging.getLogger('wishful_agent')
 logLevel = logging.DEBUG
-logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s')
+logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s',
+					filename="/tmp/wishful_agent.log")
 
 #Create and configure
 agent = wishful_agent.Agent()
