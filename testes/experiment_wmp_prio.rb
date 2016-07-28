@@ -12,7 +12,7 @@ defProperty('bitrate_type', 'fixed', 'Interface bitrate type. Can be algorith or
 defProperty('bitrate_value', '11', 'Interface bitrate value. Can be a algorithm name or a fixed value')
 
 defProperty('contr', 'omf.ufrj.icarus2', 'WiSHFUL Controller Node')
-defProperty('agent', 'omf.ufrj.icarus2, omf.ufrj.icarus28', 'WiSHUL Agent Node')
+defProperty('agent', 'omf.ufrj.icarus2,omf.ufrj.icarus28', 'WiSHUL Agent Node')
 defProperty('path','/root/git/masquerade/testes/',"Path to WiSHFUL configuration directory")
 
 defApplication('controller') do |app|
@@ -26,13 +26,13 @@ end
 
 defGroup('Controllers', property.contr ) do |node|
   info "Controller will be on #{property.contr}."
-  node.addApplication( "controller" ) do |app|
+  node.addApplication( "controller", :id => 'controller') do |app|
   end
 end
 
 defGroup('Agents', property.agent ) do |node|
   info "Agent will be on #{property.agent}."
-  node.addApplication( "agent" ) do |app|
+  node.addApplication( "agent", :id => 'agent') do |app|
   end
 end
 # Define the resources group 'Server'
