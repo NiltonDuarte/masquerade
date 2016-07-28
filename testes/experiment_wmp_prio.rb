@@ -144,7 +144,8 @@ onEvent(:ALL_UP_AND_INSTALLED) do |event|
   group("Agents").startApplication('agent')
   wait 10
   info "Starting iperf server..."
-  group("Server").startApplication('iperf_server')
+  group("Server").startApplication('iperf_server_2')
+  group("Server").startApplication('iperf_server_28')
   wait 10
   info "Starting client_28 iperf client..."
   group("Client_28").startApplication('iperf_client')
