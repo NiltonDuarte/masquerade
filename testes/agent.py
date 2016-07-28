@@ -14,8 +14,8 @@ logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s(
 #Create and configure
 agent = wishful_agent.Agent()
 
-name = "WishfulAgent-{0}".format(plataform.node()) #Returns the computer’s network name
-info = "Wishful Agent on {0} node. {1}".format(plataform.node(), platform.uname())
+name = "WishfulAgent-{0}".format(platform.node()) #Returns the computer’s network name
+info = "Wishful Agent on {0} node. {1}".format(platform.node(), platform.uname())
 groupName = "wishful_icarus"
 agent.set_agent_info(name=name, info=info, iface="eth0")
 
