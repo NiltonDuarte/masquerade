@@ -14,13 +14,18 @@ import shutil
 
 import wishful_module_wifi
 import wishful_upis as upis
-import wishful_framework.upi_arg_classes.edca as edca #<----!!!!! Important to include it here; otherwise cannot be pickled!!!!
+#import wishful_framework.upi_arg_classes.edca as edca #<----!!!!! Important to include it here; otherwise cannot be pickled!!!!
 
 from wmp_structure import UPI_R
 from adaptation_module.libb43 import *
 
 import wishful_framework as wishful_module
 from wishful_framework.classes import exceptions
+
+"""
+Its a snippet (only one UPI function) of the code from Domenico with minor bug correction, entire code on WiSHFUL project repository
+https://github.com/wishful-project
+"""
 
 __author__ = "Domenico Garlisi"
 __copyright__ = "Copyright (c) 2015, Technische Universität Berlin"

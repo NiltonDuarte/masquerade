@@ -24,9 +24,6 @@ agent.add_module(moduleName="discovery", pyModule="wishful_module_discovery_pyre
 agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp", 
                  className="WmpModule", interfaces=['wlan0'])
 
-agent.add_module(moduleName="iperf", pyModule="wishful_module_iperf", 
-                 className="IperfModule")
-
 try:
     #Start agent
     agent.run()
