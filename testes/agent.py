@@ -105,7 +105,7 @@ def gatherTxQueueStatistics():
             if iface == "wlan0":
                 txBytesList.append(int(splittedLine[9]))
 
-def sendStatistics(self):
+def sendStatistics():
     global txQList
     global txBytesList
     dest = "controller"
