@@ -21,6 +21,7 @@ class DCF_Otimizer:
         self.sigma = 20*0.000001 #in seconds
         self.T_s = 1515*0.000001
         self.T_c = 1281*0.000001
+
     def P_tr(self):
         #eq 10
         return 1-(1-self.tau_a())*(1-self.tau_b())
@@ -58,6 +59,7 @@ class DCF_Otimizer:
         return numerador/(denomin_1+denomin_2)
 
     def otim_fixedWb(self):
+        delta = 0.001
         stop = False
         prevS=0
         currS = self.S()
@@ -67,8 +69,14 @@ class DCF_Otimizer:
             prev_prevS=prevS
             prevS = currS
             self.wa = self.wa + self.step
+            if self.wa < 2:
+                self.wa = 2
+                prevS = self.S()
+                break
             currS = self.S()
             print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, self.step, _iter)
+            if abs(prevS - currS) < delta:
+                break
 
             if prevS > currS:
                 if abs(self.step)==1:
@@ -79,10 +87,11 @@ class DCF_Otimizer:
                 else:
                     self.step = -(self.step/2)
                 #self.step = -(self.step+(abs(self.step)/self.step))/2
-
+        print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, prevS, self.step, _iter)
         return prevS
 
     def otim_rate(self):
+        delta = 0.001
         stop = False
         prevS=0
         self.calc_wb()
@@ -94,13 +103,20 @@ class DCF_Otimizer:
             prevS = currS
             self.wa = self.wa + self.step
             self.calc_wb()
+            if self.wa < 2:
+                self.wa = 2
+                self.calc_wb()
+                break
             currS = self.S()
             print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, self.step, _iter)
+
+            if abs(prevS - currS) < delta:
+                break
 
             if prevS > currS:
                 if abs(self.step)==1:
                     self.wa = self.wa - self.step
-                    break;
+                    break
                 if self.step > 0:
                     self.step = -(self.step+1)/2
                 else:
@@ -115,10 +131,12 @@ class DCF_Otimizer:
         #check which ceilling or flooring the wb gives the best performance
         if cwb > fwb:
             self.wb = ceil(wb)
-            return cwb
+            ret = cwb
         else:
             self.wb = floor(wb)
-            return fwb
+            ret = fwb
+        print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, ret, self.step, _iter)
+        return ret
         
 
             
@@ -139,6 +157,8 @@ if __name__ == '__main__':
     otim.wb = 18
     ret = otim.otim_fixedWb()
     print "==================================================="
+    ret = otim.otim_rate()
+    print "==================================================="
     otim.wa=2
     otim.calc_wb()
     curr=otim.S()
@@ -147,6 +167,18 @@ if __name__ == '__main__':
         prev=curr
         otim.wa=i
         otim.calc_wb()
+        curr=otim.S()
+        
+        print prev > curr , i, curr
+    print "==================================================="
+    otim.wa=2
+    otim.wb=2
+    curr=otim.S()
+
+    for i in range(3,60):
+        prev=curr
+        otim.wa=i
+        #otim.calc_wb()
         curr=otim.S()
         
         print prev > curr , i, curr

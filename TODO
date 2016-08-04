@@ -3,10 +3,24 @@ P_{sj}=\frac{\tau_j\prod_{\forall i \neq  j} (1-\tau_i)}{P_{tr}} \\
 P_s=\sum_{\forall j} P_{sj} \\
 P_{sa}=\frac{\tau_a(1-\tau_b)}{1-(1-\tau_a)(1-\tau_b)} \qquad 
 P_{sb}=\frac{\tau_b(1-\tau_a)}{1-(1-\tau_a)(1-\tau_b)} \\
-P_s= \frac{\tau_b(1-\tau_a)+\tau_a(1-\tau_b)}{1-(1-\tau_a)(1-\tau_b)}\\
+P_s= \frac{\tau_a(1-\tau_b)+\tau_b(1-\tau_a)}{1-(1-\tau_a)(1-\tau_b)}\\
 V_j=\frac{P_{sj}P_{tr}E[P]}{(1-P_{tr})\sigma+P_{s}P_{tr}T_s+(1-P_{s})P_{tr}T_c} \\
-V_a= \\
-V_b= \\
+
+V_a e V_b completo
+V_a= \frac{\tau_a(1-\tau_b)E[P]}{(1-(1-(1-\tau_a)(1-\tau_b)))\sigma+(\tau_a(1-\tau_b)+\tau_b(1-\tau_a))T_s+(1-(1-\tau_a)(1-\tau_b))(1-\frac{\tau_a(1-\tau_b)+\tau_b(1-\tau_a)}{1-(1-\tau_a)(1-\tau_b)})T_c}\\
+V_b= \frac{\tau_b(1-\tau_a)}{(1-(1-(1-\tau_a)(1-\tau_b)))\sigma+(\tau_a(1-\tau_b)+\tau_b(1-\tau_a))T_s+(1-(1-\tau_a)(1-\tau_b))(1-\frac{\tau_a(1-\tau_b)+\tau_b(1-\tau_a)}{1-(1-\tau_a)(1-\tau_b)})T_c} \\
+
+V_j=\frac{P_{sj}P_{tr}E[P]}{(1-P_{tr})\sigma+P_{s}P_{tr}T_s+(1-P_{s})P_{tr}T_c} \\
+V_a= \frac{\tau_a(1-\tau_b)E[P]}{(1-P_{tr})\sigma+P_{s}P_{tr}T_s+(1-P_{s})P_{tr}T_c} \\
+V_b= \frac{\tau_b(1-\tau_a)E[P]}{(1-P_{tr})\sigma+P_{s}P_{tr}T_s+(1-P_{s})P_{tr}T_c} \\
+\frac{V_a}{V_b}=r=\frac{\tau_a(1-\tau_b)E[P]}{\tau_b(1-\tau_a)E[P]}=\frac{\tau_a(1-\tau_b)}{\tau_b(1-\tau_a)} \\
+Solution: \\
+\tau_b=\frac{\tau_a}{r+\tau_a-r\tau_a} \\
+
+Caso (8):\\
+\tau_j=\frac{2}{W^j+1} \\
+
+\frac{2}{W^b+1}=\frac{\frac{2}{W^a+1}}{r+\frac{2}{W^a+1}-r\frac{2}{W^a+1}}
 
 
 import wishful_module_wifi_wmp as wmp
