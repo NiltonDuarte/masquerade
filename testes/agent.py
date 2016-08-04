@@ -117,6 +117,7 @@ def sendStatistics():
             respDesc = msgs.CmdDesc()
             respDesc.type = "ProactiveStatistics"
             respDesc.func_name = gatherTxQueueStatistics.__name__
+            respDesc.serialization_type = msgs.CmdDesc.PICKLE
             response = [dest, respDesc, ret]
             agent.send_upstream(response)
         time.sleep(5)
