@@ -8,6 +8,7 @@ import yaml
 import platform
 import time
 import netifaces as ni
+import threading
 
 
 log = logging.getLogger('wishful_agent')
@@ -108,21 +109,28 @@ def sendStatistics(self):
     global txQList
     global txBytesList
     dest = "controller"
-    ret = str(txQList,txBytesList)
-    txQList = []
-    txBytesList = []
-    respDesc = msgs.CmdDesc()
-    respDesc.type = "ProactiveStatistics"
-    respDesc.func_name = gatherTxQueueStatistics.__name__
-    response = [dest, respDesc, ret]
-    agent.send_upstream(response)
+    while True:
+        if agent.ControllerMonitor.connectedToController:
+            ret = str(txQList,txBytesList)
+            txQList = []
+            txBytesList = []
+            respDesc = msgs.CmdDesc()
+            respDesc.type = "ProactiveStatistics"
+            respDesc.func_name = gatherTxQueueStatistics.__name__
+            response = [dest, respDesc, ret]
+            agent.send_upstream(response)
+        time.sleep(5)
 
 try:
     #Start agent
     stat_thread = threading.Thread(target=gatherTxQueueStatistics)
     stat_thread.daemon = True
     stat_thread.start()
+    send_thread = threading.Thread(target=sendStatistics)
+    send_thread.daemon = True
+    send_thread.start()
     agent.run()
+
 except KeyboardInterrupt:
     print("Agent exits")
 finally:
