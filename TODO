@@ -1,33 +1,133 @@
+P_{tr}=1-\prod_{\forall j}(1-\tau_j) \qquad \Rightarrow 1-(1-\tau_a)(1-\tau_b) \\
+P_{sj}=\frac{\tau_j\prod_{\forall i \neq  j} (1-\tau_i)}{P_{tr}} \\
+P_s=\sum_{\forall j} P_{sj} \\
+P_{sa}=\frac{\tau_a(1-\tau_b)}{1-(1-\tau_a)(1-\tau_b)} \qquad 
+P_{sb}=\frac{\tau_b(1-\tau_a)}{1-(1-\tau_a)(1-\tau_b)} \\
+P_s= \frac{\tau_b(1-\tau_a)+\tau_a(1-\tau_b)}{1-(1-\tau_a)(1-\tau_b)}\\
+V_j=\frac{P_{sj}P_{tr}E[P]}{(1-P_{tr})\sigma+P_{s}P_{tr}T_s+(1-P_{s})P_{tr}T_c} \\
+V_a= \\
+V_b= \\
 
 
 import wishful_module_wifi_wmp as wmp
 wm = wmp.WmpModule()
-kwa = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" :1, "CSMA_CW_MAX" : 16}
-wm.set_parameter_lower_layer(**kwa)
-wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW=1, CSMA_CW_MIN=1, CSMA_CW_MAX=16)
+
+
+padrao
+wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=31, CSMA_CW_MAX=511)
+
+prio
+wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=3, CSMA_CW_MAX=6)
+
+ping 10.129.11.200 -i 0.002 -s 372 -w 300 -f
+iperf -c 192.168.129.1 -p 5002 -t 300 -b 10m
 
 TODO
 
-testes de ping sem disputa
-config padrao - icarus -> icarus9
-set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=0x1F, CSMA_CW_MAX=0x1FF)
+##teste iperf SEM disputa
+#config padrao - icarus28-> icarus9
+root@icarus28:~# iperf -c 192.168.129.1 -p 5028 -t 300 -b 10m
+Sending 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.129.28 port 53423 connected with 192.168.129.1 port 5028
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.1 sec   163 MBytes  4.55 Mbits/sec
+[  3] Sent 116166 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec   163 MBytes  4.55 Mbits/sec  10.105 ms    0/116165 (0%)
+
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.0 sec   165 MBytes  4.61 Mbits/sec
+[  3] Sent 117686 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec   165 MBytes  4.61 Mbits/sec   1.673 ms    0/117685 (0%)
 
 
-config high prio (low latency)
-wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=0x3, CSMA_CW_MAX=0xC)
+#config padrao - icarus2 -> icarus9
+root@icarus2:~# iperf -c 192.168.129.1 -p 5002 -t 300 -b 10m
+Sending 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.129.2 port 44137 connected with 192.168.129.1 port 5002
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.1 sec   154 MBytes  4.30 Mbits/sec
+[  3] Sent 109596 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec   154 MBytes  4.29 Mbits/sec  10.114 ms    0/109595 (0%)
+[  3]  0.0-300.2 sec  1 datagrams received out-of-order
+
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.0 sec   160 MBytes  4.49 Mbits/sec
+[  3] Sent 114471 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec   160 MBytes  4.48 Mbits/sec   3.796 ms    0/114470 (0%)
+
+#config prio - icarus28-> icarus9
+#config prio - icarus2 -> icarus9
+
+
+##teste iperf COM disputa
+#config padrao - icarus28-> icarus9
+root@icarus28:~# iperf -c 192.168.129.1 -p 5028 -t 300 -b 10m
+Sending 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.129.28 port 51879 connected with 192.168.129.1 port 5028
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.0 sec   165 MBytes  4.62 Mbits/sec
+[  3] Sent 117822 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec   165 MBytes  4.62 Mbits/sec  10.438 ms    0/117821 (0%)
+[  3]  0.0-300.2 sec  1 datagrams received out-of-order
+
+#config padrao - icarus2 -> icarus9
+root@icarus2:~# iperf -c 192.168.129.1 -p 5002 -t 300 -b 10m
+Sending 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 192.168.129.2 port 55338 connected with 192.168.129.1 port 5002
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-300.1 sec  8.17 MBytes   229 Kbits/sec
+[  3] Sent 5831 datagrams
+[  3] Server Report:
+[  3]  0.0-300.2 sec  4.63 MBytes   129 Kbits/sec  19.654 ms 2529/ 5830 (43%)
+[  3]  0.0-300.2 sec  1 datagrams received out-of-order
+
+
+##testes de ping sem disputa
+#config padrao - icarus28-> icarus9
+root@icarus28:~# ping 10.129.11.200 -i 0.002 -s 372 -w 300 -f
+PING 10.129.11.200 (10.129.11.200) 372(400) bytes of data.
+--- 10.129.11.200 ping statistics ---
+150001 packets transmitted, 150001 received, 0% packet loss, time 299999ms
+rtt min/avg/max/mdev = 0.101/0.173/0.590/0.027 ms, ipg/ewma 1.999/0.167 ms
+
+#config padrao - icarus2 -> icarus9
+root@icarus2:~# ping 10.129.11.200 -i 0.002 -s 372 -w 300 -f
+PING 10.129.11.200 (10.129.11.200) 372(400) bytes of data.
+--- 10.129.11.200 ping statistics ---
+150001 packets transmitted, 150001 received, 0% packet loss, time 299999ms
+rtt min/avg/max/mdev = 0.100/0.176/0.903/0.023 ms, ipg/ewma 1.999/0.174 ms
+
+#config prio - icarus28 -> icarus9
+#config prio - icarus2 -> icarus9
+
+
+testes de ping quando ha um iperf udp disputando
+UDP  config padrao - icarus28-> icarus9
+PING config prio   - icarus2 -> icarus9
 
 
 
-testes de ping quando ha uma conexao tcp iperf disputando
-config padrao - icarus -> icarus9
-set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=0x1F, CSMA_CW_MAX=0x1FF)
 
-91 packets transmitted, 91 received, 0% packet loss, time 90138ms
-rtt min/avg/max/mdev = 1.383/3.845/12.821/2.662 ms
-
-config high prio (low latency)
-wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=0x5, CSMA_CW_MAX=0x1F)
+config high prio (low latency) - icarus -> icarus9
+wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=0x3, CSMA_CW_MAX=0x6)
 
 testes com tcp e udp de baixa banda
 iperf -c 192.168.129.1 -u -b 100k -p 5002 -l 0.4k
+
+config padrao - icarus -> icarus9
+
+config high prio (low latency) - icarus -> icarus9
 

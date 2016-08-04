@@ -43,8 +43,8 @@ defGroup('Server', property.server_node) do |node|
     app.setProperty('interval', property.iperf_interval)
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'server_2')
-    app.setProperty('oml-domain', 'wmp_prio_iperf2')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf2')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 
   node.addApplication("tutorials:iperf", :id => 'iperf_server_28') do |app|
@@ -53,8 +53,8 @@ defGroup('Server', property.server_node) do |node|
     app.setProperty('interval', property.iperf_interval)
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'server_28')
-    app.setProperty('oml-domain', 'wmp_prio_iperf28')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf28')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 
   node.addApplication("tutorials:utils:wlanconfig", :id => 'server_wlanconfig') do |app|
@@ -77,8 +77,8 @@ defGroup('Client_2', property.client_icarus2_node) do |node|
     app.setProperty('time', property.runtime)
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'client_2')
-    app.setProperty('oml-domain', 'wmp_prio_iperf2')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf2')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 
   node.addApplication("tutorials:utils:wlanconfig", :id => 'client_wlanconfig') do |app|
@@ -95,8 +95,8 @@ defGroup('Client_2', property.client_icarus2_node) do |node|
     app.setProperty('server', "#{property.iperf_server_address}:#{property.iperf_2_port}")
     app.setProperty('duration', property.runtime)
     app.setProperty('oml-id', 'client')
-    app.setProperty('oml-domain', 'tcp_wmp_prio_ss28')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-tcp_wmp_prio_ss2')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 end
 
@@ -109,8 +109,8 @@ defGroup('Client_28', property.client_icarus28_node) do |node|
     app.setProperty('time', property.runtime)
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'client_28')
-    app.setProperty('oml-domain', 'wmp_prio_iperf28')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf28')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 
   node.addApplication("tutorials:utils:wlanconfig", :id => 'client_wlanconfig') do |app|
@@ -127,8 +127,8 @@ defGroup('Client_28', property.client_icarus28_node) do |node|
     app.setProperty('server', "#{property.iperf_server_address}:#{property.iperf_28_port}")
     app.setProperty('duration', property.runtime)
     app.setProperty('oml-id', 'client')
-    app.setProperty('oml-domain', 'tcp_wmp_prio_ss28')
-    app.setProperty('oml-collect', 'tcp:10.129.11.200:3004')
+    app.setProperty('oml-domain', 'niltongduarte-tcp_wmp_prio_ss28')
+    app.setProperty('oml-collect', 'tcp:10.129.11.200:3003')
   end
 end
 onEvent(:ALL_UP_AND_INSTALLED) do |event|
