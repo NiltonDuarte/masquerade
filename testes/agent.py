@@ -111,7 +111,7 @@ def sendStatistics():
     dest = "controller"
     while True:
         if agent.controllerMonitor.connectedToController:
-            ret = str(txQList,txBytesList)
+            ret = str((txQList,txBytesList))
             txQList = []
             txBytesList = []
             respDesc = msgs.CmdDesc()
