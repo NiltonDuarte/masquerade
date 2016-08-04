@@ -110,7 +110,7 @@ def sendStatistics():
     global txBytesList
     dest = "controller"
     while True:
-        if agent.ControllerMonitor.connectedToController:
+        if agent.controllerMonitor.connectedToController:
             ret = str(txQList,txBytesList)
             txQList = []
             txBytesList = []
