@@ -8,6 +8,8 @@ import gevent
 import wishful_upis as upis
 import platform
 import netifaces as ni
+import ast
+from dcf_throughput import *
 
 log = logging.getLogger('wishful_controller')
 log_level = logging.DEBUG
@@ -33,12 +35,40 @@ controller.add_module(moduleName="discovery", pyModuleName="wishful_module_disco
 
 nodes = []
 
+class ContentionWindowPriority:
+    def __init__(self):
+        self.valueDict = {}
+        self.dcfOpt = DCF_Optimizer()
+        self.nodes = []
+    def addNode(self, node):
+        self.nodes.append(node)
+        self.valueDict[node.id] = 1
+    def delNode(self, node):
+        self.nodes.remove(node)
+    def updateValue(self, node, value):
+        if value == 0:
+            return
+        self.valueDict[node.id] = value
+    def getCW(self):
+        rate = valueDict[nodes[0].id]/valueDict[nodes[1].id]
+        dcfOpt.r= rate
+        #Optimize A=rB
+        dcfOpt.otim_rate()
+        return [(nodes[0], dcfOpt.wa), (nodes[1], dcfOpt.wb)]
+
+cwPrio=ContentionWindowPriority()
+
+
+
+
+
 def AgentStatistics():
     pass
 
 @controller.new_node_callback()
 def new_node(node):
     nodes.append(node)
+    cwPrio.addNode(node)
     print("New node appeared:")
     print(node)
 
@@ -47,6 +77,7 @@ def new_node(node):
 def node_exit(node, reason):
     if node in nodes:
         nodes.remove(node);
+        cwPrio.delNode(node)
     print("NodeExit : NodeID : {} Reason : {}".format(node.id, reason))
 
 
@@ -64,7 +95,10 @@ def get_channel_reponse(group, node, data):
 
 @controller.add_callback(AgentStatistics)
 def statCallback(group, node, data):
-    print("{} statCallback : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
+    dataDict = ast.literal_eval(data)
+    dataSum = sum(dataDict.values()) 
+    cwPrio.updateValue(node, dataSum if dataSum > 0 else 1)
+    print("{} AgentStatisticsCallback : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
 
 
 
@@ -75,16 +109,13 @@ try:
     while True:
         print("\n")
         print("Connected nodes", [str(node.name) for node in nodes])
-        if nodes:
-            for node in nodes:
-                highPrio = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" : 1, "CSMA_CW_MAX" : 16}
-                #result = wmpm.set_parameter_lower_layer(args)
-                #controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
-                controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**highPrio)
-                gevent.sleep(10)
-                lowPrio = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 4095}
-                controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**lowPrio)
-        else:
+        if len(nodes)==2:
+            nodeList = cwPrio.getCW()
+            for (node, cw) in nodeList:
+                prio_kwDict = {'interface' : 'wlan0', "CSMA_CW_MIN" : cw, "CSMA_CW_MAX" : cw*4}
+                controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(interface='wlan0',
+                    CSMA_CW_MIN=cw, CSMA_CW_MAX=cw*4)
+           else:
             gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")

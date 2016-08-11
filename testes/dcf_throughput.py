@@ -7,7 +7,7 @@ that \\frac{V_a}{V_b}=r holds aproximately in W integer
 and maximaze the system troughput P_s
 Based on Performance Analysis of the IEEE 802.11 Distributed Coordination Function - Giuseppe Bianchi
 """
-class DCF_Otimizer:
+class DCF_Optimizer:
 
     def __init__(self, rate=None):
         self.r = rate
@@ -49,9 +49,9 @@ class DCF_Otimizer:
         self.wb = self.r*self.wa-self.r+1
 
     def troughput_a(self):
-
+        pass
     def troughput_b(self):
-
+        pass
     def S(self):
         #eq 25
         #self.calc_wb()
@@ -77,9 +77,9 @@ class DCF_Otimizer:
                 prevS = self.S()
                 break
             currS = self.S()
-            print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter)
+            #print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter)
             if abs(prevS - currS) < delta:
-                print "delta stopped"
+                #print "delta stopped"
                 break
 
             if prevS > currS:
@@ -91,7 +91,7 @@ class DCF_Otimizer:
                 else:
                     step = -(step/2)
                 #step = -(step+(abs(step)/step))/2
-        print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, prevS, step, _iter)
+        #print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, prevS, step, _iter)
         return prevS
 
     def otim_rate(self):
@@ -113,10 +113,10 @@ class DCF_Otimizer:
                 self.calc_wb()
                 break
             currS = self.S()
-            print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter)
+            #print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter)
 
             if abs(prevS - currS) < delta:
-                print "delta stopped"
+                #print "delta stopped"
                 break
             if prevS > currS:
                 if abs(step)==1:
@@ -140,7 +140,7 @@ class DCF_Otimizer:
         else:
             self.wb = floor(wb)
             ret = fwb
-        print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, ret, step, _iter)
+        #print "FINISHED wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, ret, step, _iter)
         return ret
         
 
@@ -148,14 +148,10 @@ class DCF_Otimizer:
 
 
 
-    def __call__(self):
-        ret = self.otim_rate()
-        print "wa={}, wb={}, S={}".format(self.wa, self.wb, ret)
-        return ret
-        
-        #self.wa=22
-        #self.calc_wb()
-        #print self.S()
+    #def __call__(self):
+    #    ret = self.otim_rate()
+    #    print "wa={}, wb={}, S={}".format(self.wa, self.wb, ret)
+    #    return ret
 
 if __name__ == '__main__':
     otim = DCF_Otimizer(1)
