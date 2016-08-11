@@ -152,7 +152,7 @@ class DCF_Optimizer:
     #    ret = self.otim_rate()
     #    print "wa={}, wb={}, S={}".format(self.wa, self.wb, ret)
     #    return ret
-
+"""
 if __name__ == '__main__':
     otim = DCF_Otimizer(1)
     otim.wb = 17
@@ -168,7 +168,7 @@ if __name__ == '__main__':
     otim.wa=32
     otim.wb=32
     print otim.S()
-"""
+
     for i in range(3,60):
         prev=curr
         otim.wa=i
