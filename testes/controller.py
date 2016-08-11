@@ -115,8 +115,9 @@ try:
                 prio_kwDict = {'interface' : 'wlan0', "CSMA_CW_MIN" : cw, "CSMA_CW_MAX" : cw*4}
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(interface='wlan0',
                     CSMA_CW_MIN=cw, CSMA_CW_MAX=cw*4)
-           else:
-            gevent.sleep(10)
+            gevent.sleep(1)
+        else:
+           gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")
 finally:
