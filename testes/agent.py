@@ -95,7 +95,7 @@ class AgentStatistics:
         networkAddr = [[x&y for (x,y) in zip(ipList,maskList)] for (ipList,maskList) in ip_maskList]
         self.ip_maskList = ip_maskList
         self.networkAddr = networkAddr
-    def gatherTxBytesStatistics(self):
+    def gatherTxBytes(self):
         #devF = open("/proc/net/dev")
         with open("/proc/net/dev") as devF:
             for line in devF:
@@ -103,7 +103,7 @@ class AgentStatistics:
                 iface = splittedLine[0][:-1]
                 if iface == self.iface:
                     return int(splittedLine[9])
-    def gatherTxQueueStatistics(self):
+    def gatherTxQueue(self):
         """From proc manual
            /proc/net/tcp
                   Holds a dump of the TCP socket table.  Much of the information is not of use apart from debugging.  The "sl" value is the kernel hash slot for the socket,  the  "local_address"  is
@@ -161,7 +161,7 @@ class AgentStatistics:
         mean = values[0]
         for i in values[1:]:
             mean = alfa*i+(1-alfa)*mean
-        return (dictKeyWord, mean)
+        return (dictKeyWord+'EMA', mean)
 
 """
 agentStatistics = AgentStatistics("wlan0")
@@ -171,10 +171,10 @@ agentStatistics.startGathering()
 
 try:
     agentStatistics = AgentStatistics(agent, "wlan0")
-    agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueueStatistics)
-    agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytesStatistics)
-    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxQueueStatistics', 0.8)
-    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxBytesStatistics', 0.8)
+    agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueue)
+    agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytes)
+    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxQueue', 0.8)
+    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxBytes', 0.8)
     agentStatistics.start()
     #Start agent
     agent.run()
