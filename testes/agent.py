@@ -73,8 +73,8 @@ class AgentStatistics:
         msg = {}
         if self.agent.controllerMonitor.connectedToController:
             for (func, varargs, kwargs) in self.processFunctions:
-                ret = func(data, *varargs, **kwargs)
-                msg[func.__name__] = ret
+                kw, values = func(data, *varargs, **kwargs)
+                msg[kw] = values
             msg = str(msg)
             respDesc = msgs.CmdDesc()
             respDesc.type = "AgentStatistics"
@@ -161,7 +161,7 @@ class AgentStatistics:
         mean = values[0]
         for i in values[1:]:
             mean = alfa*i+(1-alfa)*mean
-        return mean
+        return (dictKeyWord, mean)
 
 """
 agentStatistics = AgentStatistics("wlan0")
