@@ -162,7 +162,14 @@ class AgentStatistics:
         for i in values[1:]:
             mean = alfa*i+(1-alfa)*mean
         return (dictKeyWord+'EMA', mean)
-
+    def deltaExponentialMovingAverage(self,dataSet, dictKeyWord, alfa):
+        values = dataSet[dictKeyWord]
+        mean = values[1] - values[0]
+        prev_i = values[1]
+        for i in values[2:]:
+            mean = alfa*(i-prev_i)+(1-alfa)*mean
+            prev_i = i
+        return (dictKeyWord+'DEMA', mean)
 """
 agentStatistics = AgentStatistics("wlan0")
 agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueueStatistics)
@@ -174,7 +181,7 @@ try:
     agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueue)
     agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytes)
     agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxQueue', 0.8)
-    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxBytes', 0.8)
+    agentStatistics.addProcessFunction(agentStatistics.deltaExponentialMovingAverage,'gatherTxBytes', 0.8)
     agentStatistics.start()
     #Start agent
     agent.run()
