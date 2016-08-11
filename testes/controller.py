@@ -33,7 +33,7 @@ controller.add_module(moduleName="discovery", pyModuleName="wishful_module_disco
 
 nodes = []
 
-def gatherTxQueueStatistics():
+def AgentStatistics():
     pass
 
 @controller.new_node_callback()
@@ -62,7 +62,7 @@ def print_response(group, node, data):
 def get_channel_reponse(group, node, data):
     print("{} get_set_parameter_reponse : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
 
-@controller.add_callback(gatherTxQueueStatistics)
+@controller.add_callback(AgentStatistics)
 def statCallback(group, node, data):
     print("{} statCallback : Group:{}, NodeId:{}, msg:{}".format(datetime.datetime.now(), group, node.id, data))
 

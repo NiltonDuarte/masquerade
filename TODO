@@ -22,7 +22,8 @@ Caso (8):\\
 
 \frac{2}{W^b+1}=\frac{\frac{2}{W^a+1}}{r+\frac{2}{W^a+1}-r\frac{2}{W^a+1}} \\
 
-W^b=rW^a-r+1
+W^b=rW^a-r+1 \\
+W^b=rW^a+\frac{1-r}{(1+p\sum_{i=0}^{m-1}(2p)^i)}; (1+p\sum_{i=0}^{m-1}(2p)^i)\approx 1
 
 
 
