@@ -13,7 +13,7 @@ class DCF_Optimizer:
         self.r = rate
         self.wa = 68.
         self.wb = 32.
-        self.calc_wb()
+        #self.calc_wb()
         
         #medidas em us do padrao 802.11b, valores retirados da pagina 16 tese mestrado power evaluation[...]
         self.e_p = 1400*8/(1024.*1024.) #in megabit
