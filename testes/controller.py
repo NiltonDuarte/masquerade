@@ -50,11 +50,11 @@ class ContentionWindowPriority:
             return
         self.valueDict[node.id] = value
     def getCW(self):
-        rate = valueDict[nodes[0].id]/valueDict[nodes[1].id]
-        dcfOpt.r= rate
+        rate = self.valueDict[nodes[0].id]/self.valueDict[nodes[1].id]
+        self.dcfOpt.r= rate
         #Optimize A=rB
-        dcfOpt.otim_rate()
-        return [(nodes[0], dcfOpt.wa), (nodes[1], dcfOpt.wb)]
+        self.dcfOpt.otim_rate()
+        return [(self.nodes[0], self.dcfOpt.wa), (self.nodes[1], self.dcfOpt.wb)]
 
 cwPrio=ContentionWindowPriority()
 
