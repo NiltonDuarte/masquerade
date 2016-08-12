@@ -96,10 +96,10 @@ def get_channel_reponse(group, node, data):
 
 @controller.add_callback(AgentStatistics)
 def statCallback(group, node, data):
+    print("{} AgentStatisticsCallback : Group:{}, NodeName:{}, msg:{}".format(datetime.datetime.now(), group, node.name, data))
     dataDict = ast.literal_eval(data)
     dataSum = sum(dataDict.values()) 
     cwPrio.updateValue(node, dataSum if dataSum > 0 else 1)
-    print("{} AgentStatisticsCallback : Group:{}, NodeName:{}, msg:{}".format(datetime.datetime.now(), group, node.name, data))
 
 
 
