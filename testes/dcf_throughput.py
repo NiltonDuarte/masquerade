@@ -113,7 +113,7 @@ class DCF_Optimizer:
                 self.calc_wb()
                 break
             currS = self.S()
-            #print "wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter)
+            print ("wa= {}, wb= {}, S= {}, step= {}, iter {}".format(self.wa, self.wb, currS, step, _iter))
 
             if abs(prevS - currS) < delta:
                 #print "delta stopped"
