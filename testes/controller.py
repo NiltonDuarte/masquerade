@@ -9,6 +9,7 @@ import wishful_upis as upis
 import platform
 import netifaces as ni
 import ast
+import traceback
 from dcf_throughput import *
 
 log = logging.getLogger('wishful_controller')
@@ -119,8 +120,9 @@ try:
                     CSMA_CW_MIN=cw, CSMA_CW_MAX=cw*4)
             gevent.sleep(1)
         else:
-           gevent.sleep(10)
+            gevent.sleep(10)
 except KeyboardInterrupt:
     print("Controller exits")
+    traceback.print_exc()
 finally:
     controller.stop()
