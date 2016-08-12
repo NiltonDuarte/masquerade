@@ -124,9 +124,9 @@ class DCF_Optimizer:
                     self.calc_wb()
                     break
                 if step > 0:
-                    step = -(step+1)/2
+                    step = -(step+1)//2
                 else:
-                    step = -(step/2)
+                    step = -(step//2)
                 #step = -(step+(abs(step)/step))/2       
         wb = self.wb   
         self.wb = ceil(wb)
