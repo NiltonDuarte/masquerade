@@ -179,9 +179,9 @@ agentStatistics.startGathering()
 try:
     agentStatistics = AgentStatistics(agent, "wlan0")
     agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueue)
-    agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytes)
+    #agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytes)
     agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxQueue', 0.7)
-    agentStatistics.addProcessFunction(agentStatistics.deltaExponentialMovingAverage,'gatherTxBytes', 0.7)
+    #agentStatistics.addProcessFunction(agentStatistics.deltaExponentialMovingAverage,'gatherTxBytes', 0.7)
     agentStatistics.start()
     #Start agent
     agent.run()
