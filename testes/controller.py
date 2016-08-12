@@ -102,8 +102,6 @@ def statCallback(group, node, data):
     cwPrio.updateValue(node, dataVal if dataVal > 0 else 1)
     print("AgentStatisticsCallback sum:{}, squareQueue:{}".format(dataVal, dataDict['gatherTxQueueEMA']**2+dataDict['gatherTxBytesDEMA']))
 
-
-
 try:
     #Start controller
     controller.start()
