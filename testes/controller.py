@@ -116,7 +116,6 @@ try:
             for (node, cw) in nodeList:
                 cw = max(4,cw)
                 cw = min(256,cw)
-                prio_kwDict = {'interface' : 'wlan0', "CSMA_CW_MIN" : cw, "CSMA_CW_MAX" : cw*4}
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(interface='wlan0',
                     CSMA_CW_MIN=cw, CSMA_CW_MAX=cw*4)
             gevent.sleep(1)
