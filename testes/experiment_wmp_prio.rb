@@ -10,6 +10,10 @@ defProperty('iperf_28_port', 2028, "Iperf port")
 defProperty('iperf_interval', '1', "Iperf interval")
 defProperty('bitrate_type', 'fixed', 'Interface bitrate type. Can be algorith or fixed')
 defProperty('bitrate_value', '11', 'Interface bitrate value. Can be a algorithm name or a fixed value')
+defProperty('iperf_isUDP_2', 'true', "Set Iperf UDP")
+defProperty('iperf_bandwidth_2', '5m', 'Iperf bandwidth')
+defProperty('iperf_isUDP_28', 'true', "Set Iperf UDP")
+defProperty('iperf_bandwidth_28', '200k', 'Iperf bandwidth')
 
 defProperty('contr', 'omf.ufrj.icarus2', 'WiSHFUL Controller Node')
 defProperty('agent', 'omf.ufrj.icarus2,omf.ufrj.icarus28', 'WiSHUL Agent Node')
@@ -75,6 +79,10 @@ defGroup('Client_2', property.client_icarus2_node) do |node|
     app.setProperty('port', property.iperf_2_port)
     app.setProperty('interval', property.iperf_interval)
     app.setProperty('time', property.runtime)
+    app.setProperty('udp', (property.iperf_isUDP_2.value == 'true' ? true : false))
+    if property.iperf_isUDP_2.value == 'true'
+      app.setProperty('bandwidth', property.iperf_bandwidth_2)
+    end
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'client_2')
     app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf2')
@@ -107,6 +115,10 @@ defGroup('Client_28', property.client_icarus28_node) do |node|
     app.setProperty('port', property.iperf_28_port)
     app.setProperty('interval', property.iperf_interval)
     app.setProperty('time', property.runtime)
+    app.setProperty('udp', (property.iperf_isUDP_28.value == 'true' ? true : false))
+    if property.iperf_isUDP_28.value == 'true'
+      app.setProperty('bandwidth', property.iperf_bandwidth_28)
+    end
     app.setProperty('reportstyle', 'o')
     app.setProperty('oml-id', 'client_28')
     app.setProperty('oml-domain', 'niltongduarte-wmp_prio_iperf28')

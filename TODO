@@ -181,3 +181,35 @@ config high prio (low latency) - icarus -> icarus9
 ['sl', 'local_address', 'rem_address', 'st', 'tx_queue', 'rx_queue', 'tr', 'tm->when', 'retrnsmt', 'uid', 'timeout', 'inode', 'ref', 'pointer', 'drops']
 >>> print uf.readline().split()
 ['839:', '00000000:9C96', '00000000:0000', '07', '00000000:00000000', '00:00000000', '00000000', '0', '0', '14297', '2', 'ffff8801750f8000', '0']
+
+
+
+
+
+
+
+
+
+Icarus2 - config padrao sem concorrencia forcada - b=10M
+[  4] local 192.168.129.1 port 5002 connected with 192.168.129.2 port 32881
+[  4]  0.0-120.3 sec  38.1 MBytes  2.66 Mbits/sec  16.698 ms    7/27188 (0.026%)
+Icarus2 - config padrao sem concorrencia forcada - b=200k
+[  3] 40.0-50.0 sec   243 KBytes   199 Kbits/sec  18.275 ms    0/  169 (0%)
+[  3] 50.0-60.0 sec   245 KBytes   201 Kbits/sec   5.935 ms    0/  171 (0%)
+[  3] 60.0-70.0 sec   244 KBytes   200 Kbits/sec  10.456 ms    0/  170 (0%)
+[  3]  0.0-120.1 sec  2.86 MBytes   200 Kbits/sec   2.944 ms    3/ 2042 (0.15%)
+
+Icarus20 - config padrao sem concorrencia forcada b=10M
+[  3]  0.0-120.2 sec  74.4 MBytes  5.19 Mbits/sec   8.374 ms    0/53048 (0%)
+
+Icarus2 - config padrao COM concorrencia forcada - icarus10 b=10M; icarus2 b=200k
+icarus2  [  4]  0.0-120.1 sec  2.85 MBytes   199 Kbits/sec  27.983 ms    7/ 2042 (0.34%)
+icarus10 [  4]  0.0-120.1 sec  71.9 MBytes  5.02 Mbits/sec   7.237 ms    0/51297 (0%)
+
+Icarus2 - config otim COM concorrencia forcada - icarus10 b=10M; icarus2 b=200k
+icarus2  [  3]  0.0-120.1 sec  2.73 MBytes   191 Kbits/sec   4.553 ms   92/ 2042 (4.5%)
+         [  4]  0.0-120.1 sec  2.74 MBytes   191 Kbits/sec  14.725 ms   89/ 2042 (4.4%)
+         
+icarus10 [  3]  0.0-120.2 sec  67.8 MBytes  4.74 Mbits/sec   7.926 ms    0/48390 (0%)
+         [  4]  0.0-120.3 sec  67.7 MBytes  4.72 Mbits/sec   2.977 ms    0/48262 (0%)
+
