@@ -71,12 +71,12 @@ try:
         print("Connected nodes", [str(node.name) for node in nodes])
         if nodes:
             for node in nodes:
-                highPrio = {'interface' : 'wlan0', "CSMA_CW" : 1, "CSMA_CW_MIN" : 1, "CSMA_CW_MAX" : 16}
+                highPrio = {'interface' : 'wlan0', "CSMA_CW_MIN" : 3, "CSMA_CW_MAX" : 12}
                 #result = wmpm.set_parameter_lower_layer(args)
                 #controller.blocking(False).node(nodes[0]).radio.iface("wlan0").set_parameter_lower_layer(args)
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**highPrio)
-                gevent.sleep(10)
-                lowPrio = {'interface' : 'wlan0', "CSMA_CW" : 32, "CSMA_CW_MIN" : 32, "CSMA_CW_MAX" : 4095}
+                gevent.sleep(5)
+                lowPrio = {'interface' : 'wlan0', "CSMA_CW_MIN" : 31, "CSMA_CW_MAX" : 127}
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(**lowPrio)
         else:
             gevent.sleep(10)
