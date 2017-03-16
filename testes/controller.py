@@ -10,6 +10,7 @@ import platform
 import netifaces as ni
 import ast
 import traceback
+from math import log
 from dcf_throughput import *
 
 log = logging.getLogger('wishful_controller')
@@ -98,9 +99,14 @@ def get_channel_reponse(group, node, data):
 def statCallback(group, node, data):
     print("{} AgentStatisticsCallback : Group:{}, NodeName:{}, msg:{}".format(datetime.datetime.now(), group, node.name, data))
     dataDict = ast.literal_eval(data)
-    #dataVal = dataDict['gatherNumberOfConnectionsAM']
-    dataVal = dataDict['gatherLostPacketsCounterDAM']
-    cwPrio.updateValue(node, dataVal if dataVal > 0 else 0.0001)
+    selector = 2
+    if (selector==1):
+        dataVal = dataDict['gatherNumberOfConnectionsAM']
+        cwPrio.updateValue(node, dataVal if dataVal > 0 else 0.01)
+    if (selector==2):
+        dataVal = dataDict['gatherLostPacketsCounterDAM']
+        dataVal = dataVal + 1 #avoid 0 (domain error), adding one to both result will not change the results drastically
+        cwPrio.updateValue(node, log(dataVal))
 
 try:
     #Start controller
