@@ -131,6 +131,11 @@ class AgentStatistics:
         wmpy.updateView()
         lostCounter = wmpy.mem1
         return lostCounter
+    def gatherSentPacketsCounter(self):
+        wmpy = WMPy()
+        wmpy.updateView()
+        sentCounter = wmpy.mem2
+        return sentCounter    
     def gatherTxBytes(self):
         #devF = open("/proc/net/dev")
         with open("/proc/net/dev") as devF:
@@ -257,6 +262,7 @@ class AgentStatistics:
         mean = valSum/(len(values)-1)
         return (dictKeyWord+'DAM', mean)
 
+
 #====================
 #===== Here is the agent code ===============
 
@@ -283,10 +289,16 @@ agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp",
 
 try:
     agentStatistics = AgentStatistics(agent, "wlan0")
-    #agentStatistics.addGatheringFunction(agentStatistics.gatherNumberOfConnections)
-    #agentStatistics.addProcessFunction(agentStatistics.arithmeticMean,'gatherNumberOfConnections')
-    agentStatistics.addGatheringFunction(agentStatistics.gatherLostPacketsCounter)
-    agentStatistics.addProcessFunction(agentStatistics.deltaArithmeticMean,'gatherLostPacketsCounter')
+    selector = 2
+    if (selector==1):
+        agentStatistics.addGatheringFunction(agentStatistics.gatherNumberOfConnections)
+        agentStatistics.addProcessFunction(agentStatistics.arithmeticMean,'gatherNumberOfConnections')
+    if (selector==2):
+        agentStatistics.addGatheringFunction(agentStatistics.gatherLostPacketsCounter)
+        agentStatistics.addProcessFunction(agentStatistics.deltaArithmeticMean,'gatherLostPacketsCounter')
+    if (selector==3):
+        agentStatistics.addGatheringFunction(agentStatistics.gatherSentPacketsCounter)
+        agentStatistics.addProcessFunction(agentStatistics.deltaArithmeticMean,'gatherSentPacketsCounter')
     agentStatistics.start()
     #Start agent
     agent.run()

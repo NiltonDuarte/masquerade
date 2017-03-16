@@ -105,10 +105,14 @@ def statCallback(group, node, data):
         cwPrio.updateValue(node, dataVal if dataVal > 0 else 0.01)
     if (selector==2):
         dataVal = dataDict['gatherLostPacketsCounterDAM']
-        dataVal = dataVal + 1 #avoid 0 (domain error), adding one to both result will not change the results drastically
+        dataVal = dataVal + 2 #avoid 0 (domain error), adding one to both result will not change the results drastically
         print("Counter Data Received {0} {1}".format(node.name, dataVal))
-        cwPrio.updateValue(node, math.log(dataVal))
-
+        cwPrio.updateValue(node, 1/math.log(dataVal))
+    if (selector==3):
+        dataVal = dataDict['gatherSentPacketsCounterDAM']
+        dataVal = dataVal #avoid 0 (domain error), adding one to both result will not change the results drastically
+        print("Counter Data Received {0} {1}".format(node.name, dataVal))
+        cwPrio.updateValue(node, dataVal)
 try:
     #Start controller
     controller.start()
