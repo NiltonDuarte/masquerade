@@ -10,7 +10,7 @@ import platform
 import netifaces as ni
 import ast
 import traceback
-from math import log
+import math
 from dcf_throughput import *
 
 log = logging.getLogger('wishful_controller')
@@ -106,7 +106,7 @@ def statCallback(group, node, data):
     if (selector==2):
         dataVal = dataDict['gatherLostPacketsCounterDAM']
         dataVal = dataVal + 1 #avoid 0 (domain error), adding one to both result will not change the results drastically
-        cwPrio.updateValue(node, log(dataVal))
+        cwPrio.updateValue(node, math.log(dataVal))
 
 try:
     #Start controller
