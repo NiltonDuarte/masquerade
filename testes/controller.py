@@ -106,7 +106,7 @@ def statCallback(group, node, data):
     if (selector==2):
         dataVal = dataDict['gatherLostPacketsCounterDAM']
         dataVal = dataVal + 1 #avoid 0 (domain error), adding one to both result will not change the results drastically
-        print("Counter Data Received {0} {1}".format(nome.name, dataVal))
+        print("Counter Data Received {0} {1}".format(node.name, dataVal))
         cwPrio.updateValue(node, math.log(dataVal))
 
 try:
