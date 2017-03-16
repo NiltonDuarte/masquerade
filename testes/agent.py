@@ -11,24 +11,55 @@ import netifaces as ni
 import threading
 
 
-log = logging.getLogger('wishful_agent')
-logLevel = logging.DEBUG
-logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s',
-                    filename="/tmp/wishful_agent.log")
+import subprocess
+import re
+import datetime
 
-#Create and configure
-agent = wishful_agent.Agent()
+#===== Those class should be in a separated file, I've kept in a single file for sake of simplicity ===============
 
-name = "WishfulAgent-{0}".format(platform.node()) #Returns the computer’s network name
-info = "Wishful Agent on {0} node. {1}".format(platform.node(), platform.uname())
-groupName = "wishful_icarus"
-agent.set_agent_info(name=name, info=info, iface="eth0")
+class WMPy:
+    def __init__(self):
+        self.reg1 = None
+        self.reg2 = None
+        self.mem1 = None
+        self.mem2 = None
+        self.mem3 = None
+        self.currBytecode = None
+        self.path = '/root/bytecode-manager/bytecode-manager'
+    def updateView(self):
+        p = subprocess.Popen(self.path+ ' -v', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in p.stdout.readlines():
+            line = line.decode()
+            pos = line.find('=')+2
+            if 'CURRENT BYTECODE' in line:
+                self.currBytecode = int(line[pos:],16)
+            elif 'Register 1' in line:
+                self.reg1 = int(line[pos:],16)
+            elif 'Register 2' in line:
+                self.reg2 = int(line[pos:],16)
+            elif 'Memory 1' in line:
+                self.mem1 = int(line[pos:],16)
+            elif 'Memory 2' in line:
+                self.mem2 = int(line[pos:],16)
+            elif 'Memory 3' in line:
+                self.mem3 = int(line[pos:],16)
+        retval = p.wait()
+    def load(self, bytecodePath, position):
+        p = subprocess.Popen(self.path + ' -l '+str(position) + ' -m '+ bytecodePath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        retval = p.wait()
 
-agent.add_module(moduleName="discovery", pyModule="wishful_module_discovery_pyre", 
-                 className="PyreDiscoveryAgentModule", kwargs={"iface":"eth0", "groupName":groupName})
+    def active(self, position):
+        p = subprocess.Popen(self.path + ' -a '+str(position), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        retval = p.wait()
 
-agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp", 
-                 className="WmpModule", interfaces=['wlan0'])
+    def __repr__(self):
+        ret= "Current Bytecode = " + str(self.currBytecode) + '\n'
+        ret+= "Registro 1 (Var1) = " + str(self.reg1) + '\n'
+        ret+= "Registro 2 (Var2) = " + str(self.reg2) + '\n'
+        ret+= "Memory 1 (Var3) = " + str(self.mem1) + '\n'
+        ret+= "Memory 2 (Var4) = " + str(self.mem2) + '\n'
+        ret+= "Memory 3 (Var5) = " + str(self.mem3)
+        return ret
 
 class AgentStatistics:
     def __init__(self, agent, iface):
@@ -95,6 +126,11 @@ class AgentStatistics:
         networkAddr = [[x&y for (x,y) in zip(ipList,maskList)] for (ipList,maskList) in ip_maskList]
         self.ip_maskList = ip_maskList
         self.networkAddr = networkAddr
+    def gatherLostPacketsCounter(self):
+        wmpy = WMPy()
+        wmpy.updateView()
+        lostCounter = wmpy.mem1
+        return lostCounter
     def gatherTxBytes(self):
         #devF = open("/proc/net/dev")
         with open("/proc/net/dev") as devF:
@@ -103,6 +139,40 @@ class AgentStatistics:
                 iface = splittedLine[0][:-1]
                 if iface == self.iface:
                     return int(splittedLine[9])
+    def gatherNumberOfConnections(self):
+        conns = 0
+        with open("/proc/net/udp") as udpF:
+            udpF.readline()
+            for line in udpF:
+                #get the tx_queue
+                txQ = line.split()[4].split(":")[0]
+                txQ = int(txQ, 16)
+                #get remote addr
+                remIP = line.split()[2].split(":")[0]
+                remIP = ["".join(x) for x in zip(*[iter(remIP)]*2)]
+                remIP = [int(x, 16) for x in remIP]
+                remIP = remIP[::-1]
+                #check if the remote addr is in the same range any of the wlan0 network addresses prefix
+                #Wlan0AddrRangeCheck = [netAddr==checkedAddr for (netAddr,checkedAddr) in zip(networkAddr,[[x&y for (x,y) in zip(remIP,netAddr)] for netAddr in networkAddr])]
+                Wlan0AddrRangeCheck = [[x&y for (x,y) in zip(remIP,netAddr)]==netAddr for netAddr in self.networkAddr]
+                if True in Wlan0AddrRangeCheck:
+                    conns += 1
+        with open("/proc/net/tcp") as tcpF:
+            tcpF.readline()
+            for line in tcpF:
+                #get the tx_queue
+                txQ = line.split()[4].split(":")[0]
+                txQ = int(txQ, 16)
+                #get remote addr
+                remIP = line.split()[2].split(":")[0]
+                remIP = ["".join(x) for x in zip(*[iter(remIP)]*2)]
+                remIP = [int(x, 16) for x in remIP]
+                remIP = remIP[::-1]
+                #Wlan0AddrRangeCheck = [netAddr==checkedAddr for (netAddr,checkedAddr) in zip(networkAddr,[[x&y for (x,y) in zip(remIP,netAddr)] for netAddr in networkAddr])]
+                Wlan0AddrRangeCheck = [[x&y for (x,y) in zip(remIP,netAddr)]==netAddr for netAddr in self.networkAddr]
+                if True in Wlan0AddrRangeCheck:
+                    conns += 1
+        return conns
     def gatherTxQueue(self):
         """From proc manual
            /proc/net/tcp
@@ -170,18 +240,53 @@ class AgentStatistics:
             mean = alfa*(i-prev_i)+(1-alfa)*mean
             prev_i = i
         return (dictKeyWord+'DEMA', mean)
-"""
-agentStatistics = AgentStatistics("wlan0")
-agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueueStatistics)
-agentStatistics.startGathering()
-"""
+    def arithmeticMean(self, dataSet, dictKeyWord):
+        values = dataSet[dictKeyWord]
+        valSum = 0.0
+        for i in values:
+            valSum += i
+        mean = valSum/len(values)
+        return (dictKeyWord+'AM', mean)
+    def deltaArithmeticMean(self, dataSet, dictKeyWord):
+        values = dataSet[dictKeyWord]
+        valSum = 0.0
+        prev_i = values[0]
+        for i in values[1:]:
+            valSum += i-prev_i
+            prev_i = i
+        mean = valSum/(len(values)-1)
+        return (dictKeyWord+'DAM', mean)
+
+#====================
+#===== Here is the agent code ===============
+
+
+log = logging.getLogger('wishful_agent')
+logLevel = logging.DEBUG
+logging.basicConfig(level=logLevel, format='%(asctime)s - %(name)s.%(funcName)s() - %(levelname)s - %(message)s',
+                    filename="/tmp/wishful_agent.log")
+
+#Create and configure
+agent = wishful_agent.Agent()
+
+name = "WishfulAgent-{0}".format(platform.node()) #Returns the computer’s network name
+info = "Wishful Agent on {0} node. {1}".format(platform.node(), platform.uname())
+groupName = "wishful_icarus"
+agent.set_agent_info(name=name, info=info, iface="eth0")
+
+agent.add_module(moduleName="discovery", pyModule="wishful_module_discovery_pyre", 
+                 className="PyreDiscoveryAgentModule", kwargs={"iface":"eth0", "groupName":groupName})
+
+agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp", 
+                 className="WmpModule", interfaces=['wlan0'])
+
 
 try:
     agentStatistics = AgentStatistics(agent, "wlan0")
-    agentStatistics.addGatheringFunction(agentStatistics.gatherTxQueue)
-    #agentStatistics.addGatheringFunction(agentStatistics.gatherTxBytes)
-    agentStatistics.addProcessFunction(agentStatistics.exponentialMovingAverage,'gatherTxQueue', 0.7)
-    #agentStatistics.addProcessFunction(agentStatistics.deltaExponentialMovingAverage,'gatherTxBytes', 0.7)
+    #agentStatistics.addGatheringFunction(agentStatistics.gatherNumberOfConnections)
+    #agentStatistics.addProcessFunction(agentStatistics.arithmeticMean,'gatherNumberOfConnections')
+    agentStatistics.addGatheringFunction(agentStatistics.gatherLostPacketsCounter)
+    agentStatistics.addProcessFunction(agentStatistics.deltaArithmeticMean,'gatherLostPacketsCounter')
     agentStatistics.start()
     #Start agent
     agent.run()
