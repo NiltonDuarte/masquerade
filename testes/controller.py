@@ -127,7 +127,7 @@ try:
                 cw = min(256,cw)
                 print("Node : {0} CW: {1}".format(node.name,cw))
                 controller.blocking(False).node(node).radio.iface("wlan0").set_parameter_lower_layer(interface='wlan0',
-                    CSMA_CW_MIN=cw, CSMA_CW_MAX=cw*4)
+                    CSMA_CW_MIN=cw, CSMA_CW_MAX=cw)
             gevent.sleep(1)
         else:
             gevent.sleep(10)
