@@ -289,7 +289,7 @@ agent.add_module(moduleName="wmp", pyModule="wishful_module_wifi_wmp",
 
 try:
     agentStatistics = AgentStatistics(agent, "wlan0")
-    selector = 2
+    selector = 1
     if (selector==1):
         agentStatistics.addGatheringFunction(agentStatistics.gatherNumberOfConnections)
         agentStatistics.addProcessFunction(agentStatistics.arithmeticMean,'gatherNumberOfConnections')

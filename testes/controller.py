@@ -99,7 +99,7 @@ def get_channel_reponse(group, node, data):
 def statCallback(group, node, data):
     print("{} AgentStatisticsCallback : Group:{}, NodeName:{}, msg:{}".format(datetime.datetime.now(), group, node.name, data))
     dataDict = ast.literal_eval(data)
-    selector = 2
+    selector = 1
     if (selector==1):
         dataVal = dataDict['gatherNumberOfConnectionsAM']
         cwPrio.updateValue(node, dataVal if dataVal > 0 else 0.01)
