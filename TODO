@@ -26,7 +26,11 @@ W^b=rW^a-r+1 \\
 W^b=rW^a+\frac{1-r}{(1+p\sum_{i=0}^{m-1}(2p)^i)}; (1+p\sum_{i=0}^{m-1}(2p)^i)\approx 1
 
 
+-----------
+/root/bytecode-manager/bytecode-manager -l 2 -m dcf_v3-2+counter.txt
+/root/bytecode-manager/bytecode-manager -a 2
 
+-----------
 
 import wishful_module_wifi_wmp as wmp
 wm = wmp.WmpModule()
@@ -38,8 +42,27 @@ wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=31, CSMA_CW_MAX=511)
 prio
 wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=3, CSMA_CW_MAX=6)
 
+wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=12, CSMA_CW_MAX=24)
+
 ping 192.168.129.1 -i 0.002 -s 372 -w 300 -f
 iperf -c 192.168.129.1 -p 5002 -t 300 -b 10m
+
+padrao wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=31, CSMA_CW_MAX=511)
+root@icarus2:~#  rtt min/avg/max/mdev = 1.159/4.503/36.385/4.928 ms
+root@icarus28:~# rtt min/avg/max/mdev = 1.214/5.255/38.460/5.234 ms
+
+high_prio wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=3, CSMA_CW_MAX=6)
+root@icarus2:~#  rtt min/avg/max/mdev = 1.052/2.191/7.792/1.614 ms
+root@icarus28:~# rtt min/avg/max/mdev = 1.020/2.227/8.390/1.530 ms
+
+med_prio  wm.set_parameter_lower_layer(interface='wlan0', CSMA_CW_MIN=14, CSMA_CW_MAX=28)
+root@icarus2:~#  rtt min/avg/max/mdev = 1.014/2.953/10.972/2.328 ms
+root@icarus28:~# rtt min/avg/max/mdev = 1.030/3.021/8.483/1.933 ms
+
+
+
+
+
 
 TODO
 
