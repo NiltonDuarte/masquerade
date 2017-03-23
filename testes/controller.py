@@ -107,7 +107,7 @@ def statCallback(group, node, data):
         dataVal = dataDict['gatherLostPacketsCounterDAM']
         dataVal = dataVal + 2 #avoid 0 (domain error), adding one to both result will not change the results drastically
         print("Counter Data Received {0} {1}".format(node.name, dataVal))
-        cwPrio.updateValue(node, 1/math.log(dataVal))
+        cwPrio.updateValue(node, math.log(dataVal))
     if (selector==3):
         dataVal = dataDict['gatherSentPacketsCounterDAM']
         dataVal = dataVal #avoid 0 (domain error), adding one to both result will not change the results drastically
@@ -120,7 +120,7 @@ try:
     while True:
         print("\n")
         print("Connected nodes", [str(node.name) for node in nodes])
-        if len(nodes)==2:
+        if len(nodes)==1:
             nodeList = cwPrio.getCW()
             for (node, cw) in nodeList:
                 cw = max(4,cw)
