@@ -120,7 +120,7 @@ try:
     while True:
         print("\n")
         print("Connected nodes", [str(node.name) for node in nodes])
-        if len(nodes)==1:
+        if len(nodes)==2:
             nodeList = cwPrio.getCW()
             for (node, cw) in nodeList:
                 cw = max(4,cw)
